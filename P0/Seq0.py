@@ -1,10 +1,10 @@
 def seq_ping():
     print("OK")
 
-def ask_for_file():
+def ask_for_file(FOLDER):
     exit = False
     while not exit:
-        filename = input("DNA file: ")
+        filename = FOLDER + input("DNA file: ") + ".txt"
         try:
             f = open(filename, "r")
             exit = True
