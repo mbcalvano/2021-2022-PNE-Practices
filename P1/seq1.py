@@ -49,9 +49,7 @@ class Seq:
 
     def read_fasta(self, filename):
         seq = open(filename, "r").read()
-        seq = seq[seq.find("\n"):].replace("\n", "")
-        self.strbases = seq
-        return seq
+        self.strbases = seq[seq.find("\n"):].replace("\n", "")
 
     def len(self):
         """Calculate the length of the sequence"""

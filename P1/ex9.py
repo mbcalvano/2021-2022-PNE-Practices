@@ -5,7 +5,7 @@ FILENAME = "U5"
 s = Seq()
 s.read_fasta(FOLDER + FILENAME + ".txt")
 
-print(f"Sequence: (Length: {Seq.len(s)}) {s}", sep="")
-print(f" Bases: {Seq.count(s)}")
-print(f" Rev: {Seq.reverse(s)}")
-print(f" Comp: {Seq.complement(s)}")
+print(f"Sequence: (Length: {s.len()}) {s}", sep="")
+print(f" Bases: {s.count()}")
+print(f" Rev: {s.reverse()}")
+print(f" Comp: {s.complement()}")
