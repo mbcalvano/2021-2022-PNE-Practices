@@ -4,8 +4,8 @@ import colorama
 
 
 # SERVER IP, PORT
-PORT = 21000
-IP = "212.128.253.64"
+PORT = 8000
+IP = "localhost" #if the server says localhost, the client must say so too (even the correct IP wont work)
 
 # First, create the socket
 # We will always use this parameters: AF_INET y SOCK_STREAM
@@ -22,7 +22,7 @@ s.send(str.encode("HELLO FROM THE CLIENT!!!"))
 msg = s.recv(2048)
 print("MESSAGE FROM THE SERVER:\n")
 colorama.init()
-print(colorama.Fore.RED + msg.decode("utf-8"))
+print(colorama.Fore.GREEN + msg.decode("utf-8"))
 #termcolor.cprint(msg.decode("utf-8"), "green")
 
 # Closing the socket

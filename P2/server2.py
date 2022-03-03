@@ -2,7 +2,7 @@ import socket
 from termcolor import colored
 
 # Configure the Server's IP and PORT
-PORT = 8080
+PORT = 8081
 IP = "localhost" #MY IP address or "localhost" or 127.0.0.1 (=localhost)
 #if we leave IP empty ("") -> works if using localhost
 MAX_OPEN_REQUESTS = 5
