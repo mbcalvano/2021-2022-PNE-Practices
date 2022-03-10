@@ -8,15 +8,11 @@ ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 PORT = 8080
 IP = "127.0.0.1"
 FOLDER = "../Session-04/"
-
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 ls.bind((IP, PORT))
 ls.listen()
-
-
 print("SEQ Server configured!")
-
 
 while True:
     print("Waiting for clients...")
