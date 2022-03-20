@@ -59,23 +59,33 @@ class Seq:
             return len(self.strbases)
 
     def count_base(self):
-        d = {"A": 0, "C": 0, "G": 0, "T": 0}
-        try:
-            for b in self.strbases:
-                d[b] += 1
-            return d
-        except KeyError:
-            return d
+        if self.null_sequence():
+            return "NULL"
+        elif not self.valid_sequence():
+            return "ERROR"
+        else:
+            d = {"A": 0, "C": 0, "G": 0, "T": 0}
+            try:
+                for b in self.strbases:
+                    d[b] += 1
+                return d
+            except KeyError:
+                return d
 
     def count(self):
-        d = {'A': 0, 'T': 0, 'C': 0, 'G': 0}
-        list_bases = ["A", "T", "C", "G"]
-        try:
-            for b in list_bases:
-                d[b] = self.strbases.count(b)
-            return d
-        except KeyError:
-            return d
+        if self.null_sequence():
+            return "NULL"
+        elif not self.valid_sequence():
+            return "ERROR"
+        else:
+            d = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
+            list_bases = ["A", "C", "G", "T"]
+            try:
+                for b in list_bases:
+                    d[b] = self.strbases.count(b)
+                return d
+            except KeyError:
+                return d
 
     def reverse(self):
         if self.null_sequence():

@@ -2,6 +2,36 @@ import socket
 from termcolor import colored
 from seq1 import Seq
 
+seq_list = ["ACCTCCTCTCCAGCAATGCCAACCCCAGTCCAGGCCCCCATCCGCCCAGGATCTCGATCA",
+            "AAAAACATTAATCTGTGGCCTTTCTTTGCCATTTCCAACTCTGCCACCTCCATCGAACGA",
+            "CAAGGTCCCCTTCTTCCTTTCCATTCCCGTCAGCTTCATTTCCCTAATCTCCGTACAAAT",
+            "CCCTAGCCTGACTCCCTTTCCTTTCCATCCTCACCAGACGCCCGCATGCCGGACCTCAAA",
+            "AGCGCAAACGCTAAAAACCGGTTGAGTTGACGCACGGAGAGAAGGGGTGTGTGGGTGGGT"]
+
+
+def bases_percentage(s):
+    d = s.count()
+    total = sum(d.values())
+    for k, v in d.items():
+        d[k] = [v, round((v * 100) / total, 1)]
+    return d
+
+
+def info_message(dict):
+    message = ""
+    for k, v in dict.items():
+        message += k + ": " + str(v[0]) + " (" + str(v[1]) + "%)\n"
+    return message
+
+
+def info(arg, s):
+    dict = bases_percentage(s)
+    response = "Sequence: " + arg + "\n"
+    response += "Total length: " + str(s.len()) + "\n"
+    response += info_message(dict)
+    return response
+
+
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
@@ -35,20 +65,19 @@ while True:
             if cmd == "PING":
                 response = "OK!\n"
             elif cmd == "GET":
-                seq_list = ["ACCTCCTCTCCAGCAATGCCAACCCCAGTCCAGGCCCCCATCCGCCCAGGATCTCGATCA", "AAAAACATTAATCTGTGGCCTTTCTTTGCCATTTCCAACTCTGCCACCTCCATCGAACGA", "CAAGGTCCCCTTCTTCCTTTCCATTCCCGTCAGCTTCATTTCCCTAATCTCCGTACAAAT", "CCCTAGCCTGACTCCCTTTCCTTTCCATCCTCACCAGACGCCCGCATGCCGGACCTCAAA", "AGCGCAAACGCTAAAAACCGGTTGAGTTGACGCACGGAGAGAAGGGGTGTGTGGGTGGGT"]
-                if 0 <= int(arg) <= 4:
-                    response = seq_list[int(arg)]
-                else:
+                try:
+                    index = int(arg)
+                    response = seq_list[index]
+                except ValueError:
+                    response = "The argument should be a number between 0 and 4"
+                except IndexError:
                     response = "The argument should be a number between 0 and 4"
             elif cmd == "INFO":
                 s = Seq(arg)
-                d = s.count()
-                list_bases = ["A", "T", "C", "G"]
-                percentage_a = round(d[list_bases[0]] * 100 / s.len(), 1)
-                percentage_c = round(d[list_bases[2]] * 100 / s.len(), 1)
-                percentage_g = round(d[list_bases[3]] * 100 / s.len(), 1)
-                percentage_t = round(d[list_bases[1]] * 100 / s.len(), 1)
-                response = f"Sequence: {arg}\nTotal length: {s.len()}\nA: {d[list_bases[0]]} ({percentage_a}%)\nC: {d[list_bases[2]]} ({percentage_c}%)\nG: {d[list_bases[3]]} ({percentage_g}%)\nT: {d[list_bases[1]]} ({percentage_t}%) "
+                if s.valid_sequence():
+                    response = info(arg, s)
+                else:
+                    response = "Please enter a valid DNA sequence"
             elif cmd == "COMP":
                 s = Seq(arg)
                 response = s.complement() + "\n"
