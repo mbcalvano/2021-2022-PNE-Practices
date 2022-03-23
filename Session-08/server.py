@@ -1,5 +1,5 @@
 import socket
-from termcolor import colored
+import termcolor
 
 # Configure the Server's IP and PORT
 PORT = 8080
@@ -33,11 +33,11 @@ try:
         print("CONNECTION: {}. From the IP: {}".format(number_con, address))
 
         # Read the message from the client, if any
-        msg = clientsocket.recv(2048).decode("utf-8") #2048 is a buffer where i'll store the client's information
+        msg = termcolor.colored(clientsocket.recv(2048).decode("utf-8"), "green") #2048 is a buffer where i'll store the client's information
         print("Message from client: {}".format(msg))
 
         # Send the messag
-        message = colored("Hello from the teacher's server", "green")
+        message = termcolor.colored("Hello from the teacher's server", "green")
         send_bytes = str.encode(message)
         # We must write bytes, not a string
         clientsocket.send(send_bytes) #prepared to receive an argument in bytes, not strings

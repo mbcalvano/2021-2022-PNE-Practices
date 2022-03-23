@@ -29,9 +29,9 @@ i = 0
 
 for s in sequences:
     print("To server: " + colored("Sending " + genes[i] + " gene to the server...", "blue"))
-    response = c.talk(colored("Sending " + genes[i] + " gene to the server...", "green"))
+    response = c.talk("Sending " + genes[i] + " gene to the server...")
     print(f"From server:\n\n{response}\n\n")
     print("To server: " + colored(str(s), "blue"))
-    response2 = c.talk(colored(str(s), "green"))
+    response2 = c.talk(str(s)) #LE DA COLOR AL RESTO DE LAS LINEAS
     print(f"From server:\n\n{response2}\n\n")
     i += 1
