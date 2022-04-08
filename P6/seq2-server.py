@@ -11,12 +11,19 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         termcolor.cprint(self.requestline, 'green')
         print("PATH:", self.path)
+        services_list = ["get", "gene"]
         if self.path == "/" or self.path == "/favicon.ico":
             contents = pathlib.Path("html/index.html").read_text()
         else:
             try:
-                filename = self.path.split("?")
-                contents = pathlib.Path("html/" + filename[0].replace("/", "") + ".html").read_text()
+                split_path = self.path.split("?")
+                print(split_path)
+                filename = split_path[0].replace("/", "")
+                if filename in services_list:
+                    option = split_path[1].split("=")[1]
+                    contents = pathlib.Path("html/" + filename + "-" + str(option) + ".html").read_text()
+                else:
+                    contents = pathlib.Path("html/" + filename + ".html").read_text()
             except FileNotFoundError:
                 contents = pathlib.Path("html/error.html").read_text()
         self.send_response(200)
