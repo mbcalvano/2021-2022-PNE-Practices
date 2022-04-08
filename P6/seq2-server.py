@@ -6,7 +6,6 @@ import pathlib
 PORT = 8085
 
 socketserver.TCPServer.allow_reuse_address = True
-
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -16,16 +15,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             contents = pathlib.Path("html/index.html").read_text()
         else:
             try:
-                filename = self.path.split("/")
-                print(filename)
-                if filename[1] == "info":
-                    contents = pathlib.Path("html/" + filename[2] + ".html").read_text()
-                else:
-                    contents = pathlib.Path("html/" + filename[1] + ".html").read_text()
+                filename = self.path.split("?")
+                contents = pathlib.Path("html/" + filename[0].replace("/", "") + ".html").read_text()
             except FileNotFoundError:
                 contents = pathlib.Path("html/error.html").read_text()
-
-
         self.send_response(200)
         self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', len(contents.encode()))
@@ -34,7 +27,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         return
 
 Handler = TestHandler
-
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
     print("Serving at PORT", PORT)
     try:
