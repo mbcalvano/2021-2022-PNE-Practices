@@ -15,31 +15,27 @@ Is the server alive?
 <hr size="1" width="100%" color="black">
 <form action="get" method="get">
 Get a sequence. Select a sequence number
-<select name="number">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
+<select name="n_sequence">
+        {% for n in range(0, context.n_sequences) %}
+            <option value={{n}}>{{n}}</option>
+            {% endfor %}
       </select>
 <input type="submit" value="GET"/>
 </form>
 <hr size="1" width="100%" color="black">
 <form action="gene" method="get">
     Get a gene. Select the name
-    <select name="gene">
-        <option value="U5">U5</option>
-        <option value="ADA">ADA</option>
-        <option value="FRAT1">FRAT1</option>
-        <option value="RNU6_269P">RNU6_269P</option>
-        <option value="FXN">FXN</option>
-      </select>
+    <select name="gene_name">
+        {% for g in context.genes %}
+        <option value={{g}}>{{g}}</option>
+        {% endfor %}
+    </select>
     <input type="submit" value="GENE"/>
 </form>
 <hr size="1" width="100%" color="black">
 <form action="operation" method="get">
     Write a sequence:
-    <input type="text" name="msg"><br>
+    <input type="text" name="sequence"><br>
     Select operation
     <input type="radio" name="operation" value="info" checked> Info
     <input type="radio" name="operation" value="comp"> Comp
