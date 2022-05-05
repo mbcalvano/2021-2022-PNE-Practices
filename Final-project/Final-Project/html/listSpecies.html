@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>listSpecies</title>
+</head>
+<body style="background-color: lightblue;">
+<p>The total number of species in the ensemble is: </p>
+<p> The limit you have selected is: {{context.n_species}}</p>
+<p>The names of the species are: </p>
+{% for i in context.list_species%}
+    <ul><li>{{i}}</li></ul>
+{% endfor %}
+</body>
+</html>
