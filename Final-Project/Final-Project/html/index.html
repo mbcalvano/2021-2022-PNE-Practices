@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome!!</title>
+</head>
+<body style="background-color: lightyellow;">
+<h1>Browsing human and vertebrates genome</h1>
+<p>Basic Level Services</p>
+<form action="listSpecies" method="get">
+1) List of species in the genome database:
+    <br><br>Limit:
+    <input type="text" name="limit"><br><br>
+<input type="submit" value="SEND">
+</form>
+<form action="karyotype" method="get">
+<br> <br> 2) Information about the karyotype:
+    <br><br>Select the species:
+    <input type="text" name="specie"><br><br>
+<input type="submit" value="SEND">
+</form>
+<form action="chromosomeLength" method="get">
+<br> <br> 3) Chromosome length:
+    <br><br>Select the species:
+    <input type="text" name="specie"><br><br>
+    Select a chromosome:
+    <input type="text" name="chromo"><br><br>
+<input type="submit" value="SEND">
+</form>
+<form action="geneSeq" method="get">
+<br> <br> 4) Get the sequence of a human gene: <br>
+    <br>Select a gene:
+    <select name="gene_name">
+            {% for g in context.genes %}
+            <option value={{g}}>{{g}}</option>
+            {% endfor %}
+        </select>
+<input type="submit" value="SEND">
+</form>
+<form action="geneInfo" method="get">
+<br> <br> 5) Get the info of a human gene: <br>
+    <br>Select a gene:
+    <select name="gene_name">
+            {% for g in context.genes %}
+            <option value={{g}}>{{g}}</option>
+            {% endfor %}
+        </select>
+<input type="submit" value="SEND">
+</form>
+<form action="geneCalc" method="get">
+<br> <br> 6) Perform operations on a human gene: <br>
+    <br>Select a gene:
+    <select name="gene_name">
+            {% for g in context.genes %}
+            <option value={{g}}>{{g}}</option>
+            {% endfor %}
+        </select>
+<input type="submit" value="SEND">
+</form>
+</body>
+</html>

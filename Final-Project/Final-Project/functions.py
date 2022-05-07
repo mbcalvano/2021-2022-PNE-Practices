@@ -24,9 +24,20 @@ def ensembl(endpoint):
         print("ERROR")
         return None
 
-def format_list(list):
-    content = ""
-    for i in list:
-        content += i + " \n "
-    return content
+def count_bases(seq):
+    d = {"A": 0, "C": 0, "G": 0, "T": 0}
+    for b in seq:
+        d[b] += 1
+    total = sum(d.values())
+    for k,v in d.items():
+        d[k] = [v, round((v * 100) / total, 2)]
+    return d
+
+
+def convert_message(base_count):
+    message = ""
+    for k,v in base_count.items():
+        message += k + ": " + str(v[0]) + " (" + str(v[1]) + "%)" +"\n"
+    return message
+
 
