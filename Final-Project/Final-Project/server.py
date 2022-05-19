@@ -44,7 +44,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 .render(context={
                 "genes": genes_list
             })
-        elif path == "/listSpecies": #HOW SHOULD I MANAGE INPUTS WITH SPACES
+        elif path == "/listSpecies":
             try:
                 dict_ensembl = f.ensembl("/info/species")
                 list_species = []
@@ -72,7 +72,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         elif path == "/karyotype":
             try:
                 specie = arguments["specie"][0]
-                dict_ensembl = f.ensembl("info/assembly/" + specie)
+                dict_ensembl = f.ensembl("info/assembly/" + specie.replace(" ", ""))
                 karyotype_list = dict_ensembl["karyotype"]
                 contents = f.read_html_file("karyotype.html") \
                     .render(context={
@@ -80,6 +80,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 })
             except KeyError:
                 contents = pathlib.Path("html/error.html").read_text()
+
         elif path == "/chromosomeLength":
             try:
                 species = arguments["specie"][0]
@@ -141,7 +142,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 "gene_len": gene_len,
                 "percentage": f.convert_message(base_count)
             })
-        #elif path == "/geneList":   #THE CHROMOSOMES FROM WHAT SPECIES?? HOW DO I CONNECT A GENE WITH A CHROMO?
+        #elif path == "/geneList":   THE CHROMO FROM WHAT SPECIES?? HOW DO I CONNECT A GENE WITH A CHROMO?
         else:
             contents = pathlib.Path("html/error.html").read_text()
 
