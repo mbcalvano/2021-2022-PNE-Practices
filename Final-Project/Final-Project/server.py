@@ -140,21 +140,26 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 chromosome = int(arguments["chromosome"][0])
                 start = int(arguments["start"][0])
                 end = int(arguments["end"][0])
-                dict_list_ensembl = f.ensembl("phenotype/region/homo_sapiens/" + str(chromosome) + ":" + str(start) + "-" + str(end) + "?feature_type=Variation;")
-                print(dict_list_ensembl)
-                list_genes = []
-                for d in dict_list_ensembl:
-                    if "phenotype_associations" in d.keys():
-                        for di in d["phenotype_associations"]:
-                            if "attributes" in di.keys():
-                                if "associated_gene" in di["attributes"]:
-                                    list_genes.append(di["attributes"]["associated_gene"])
-                print(list_genes)
-                contents = f.read_html_file("geneList.html") \
-                    .render(context={
-                    "list_genes": list_genes
-                })
+                if start < end:
+                    dict_list_ensembl = f.ensembl("phenotype/region/homo_sapiens/" + str(chromosome) + ":" + str(start) + "-" + str(end) + "?feature_type=Variation;")
+                    list_genes = []
+                    for d in dict_list_ensembl:
+                        if "phenotype_associations" in d.keys():
+                            for di in d["phenotype_associations"]:
+                                if "attributes" in di.keys():
+                                    if "associated_gene" in di["attributes"]:
+                                        list_genes.append(di["attributes"]["associated_gene"])
+                    contents = f.read_html_file("geneList.html") \
+                        .render(context={
+                        "list_genes": list_genes
+                    })
+                else:
+                    contents = pathlib.Path("html/error.html").read_text()
             except ValueError:
+                contents = pathlib.Path("html/error.html").read_text()
+            except KeyError:
+                contents = pathlib.Path("html/error.html").read_text()
+            except AttributeError:
                 contents = pathlib.Path("html/error.html").read_text()
         else:
             contents = pathlib.Path("html/error.html").read_text()
