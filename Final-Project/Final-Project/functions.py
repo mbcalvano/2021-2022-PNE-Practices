@@ -5,7 +5,7 @@ import jinja2 as j
 
 FOLDER = "html/"
 SERVER = "rest.ensembl.org"
-PARAMS = "?content-type=application/json"
+PARAMS = "content-type=application/json"
 
 def read_html_file(filename):
     contents = Path(FOLDER + filename).read_text()
@@ -39,5 +39,6 @@ def convert_message(base_count):
     for k,v in base_count.items():
         message += k + ": " + str(v[0]) + " (" + str(v[1]) + "%)" +"\n"
     return message
+
 
 

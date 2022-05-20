@@ -46,7 +46,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             })
         elif path == "/listSpecies":
             try:
-                dict_ensembl = f.ensembl("/info/species")
+                dict_ensembl = f.ensembl("/info/species?")
                 list_species = []
                 total_species = len([ele for ele in dict_ensembl["species"] if isinstance(ele, dict)])
                 try:
@@ -56,7 +56,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 for i in range(n_species):
                     list_species.append(dict_ensembl["species"][i]["display_name"])
                 print(n_species)
-                if list_species[0] != "":  #QUÉ PASA SI EL LIMIT ES 0
+                if list_species[0] != "":
                     contents = f.read_html_file("listSpecies.html") \
                         .render(context={
                         "n_species": n_species,
@@ -72,7 +72,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         elif path == "/karyotype":
             try:
                 specie = arguments["specie"][0]
-                dict_ensembl = f.ensembl("info/assembly/" + specie.replace(" ", ""))
+                dict_ensembl = f.ensembl("info/assembly/" + specie.replace(" ", "") + "?")
                 karyotype_list = dict_ensembl["karyotype"]
                 contents = f.read_html_file("karyotype.html") \
                     .render(context={
@@ -85,7 +85,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             try:
                 species = arguments["specie"][0]
                 chromo = arguments["chromo"][0]
-                dict_ensembl = f.ensembl("info/assembly/" + species)
+                dict_ensembl = f.ensembl("info/assembly/" + species + "?")
                 chromo_length = ""
                 for d in dict_ensembl["top_level_region"]:
                     if d["name"] == chromo:
@@ -99,50 +99,63 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     contents = pathlib.Path("html/error.html").read_text()
             except KeyError:
                 contents = pathlib.Path("html/error.html").read_text()
-        elif path == "/geneSeq":
+        elif path == "/geneSeq" or path == "/geneInfo" or path == "/geneCalc":
             gene_name = arguments["gene_name"][0]
             gene_id = genes_dict[gene_name]
-            dict_ensembl = f.ensembl("sequence/id/" + gene_id)
+            dict_ensembl = f.ensembl("sequence/id/" + gene_id + "?")
             gene_seq = dict_ensembl["seq"]
-            contents = f.read_html_file("geneSeq.html") \
+            if path == "/geneSeq": contents = f.read_html_file("geneSeq.html") \
                 .render(context={
                 "gene_seq": gene_seq
             })
-        elif path == "/geneInfo":
-            gene_name = arguments["gene_name"][0]
-            gene_id = genes_dict[gene_name]
-            dict_ensembl = f.ensembl("lookup/id/" + gene_id)
-            start = dict_ensembl["start"]
-            end = dict_ensembl["end"]
-            chromo_name = dict_ensembl["seq_region_name"] #ESTE ES EL CHROMO NAME??
-            gene_seq = f.ensembl("sequence/id/" + gene_id)["seq"]
-            s = Seq(gene_seq)
-            gene_len = s.len() #TIENE QUE SER LA LENGTH DEL GENE O DEL CHROMOSOME?
-            contents = f.read_html_file("geneInfo.html") \
-                .render(context={
-                "gene_name": gene_name,
-                "start": start,
-                "end": end,
-                "chromo_name": chromo_name,
-                "gene_len": gene_len,
-                "gene_id": gene_id
-            })
-        elif path == "/geneCalc":
-            gene_name = arguments["gene_name"][0]
-            gene_id = genes_dict[gene_name]
-            dict_ensembl = f.ensembl("sequence/id/" + gene_id)
-            gene_seq = dict_ensembl["seq"]
-            s = Seq(gene_seq)
-            base_count = s.count_percentage()
-            gene_len = s.len()
-            contents = f.read_html_file("geneCalc.html") \
-                .render(context={
-                "gene_name": gene_name,
-                "gene_seq": gene_seq,
-                "gene_len": gene_len,
-                "percentage": f.convert_message(base_count)
-            })
-        #elif path == "/geneList":   THE CHROMO FROM WHAT SPECIES?? HOW DO I CONNECT A GENE WITH A CHROMO?
+            elif path == "/geneInfo":
+                desc_list = dict_ensembl["desc"].split(":")
+                chromo_name = desc_list[2]
+                start = desc_list[3]
+                end = desc_list[4]
+                s = Seq(gene_seq)
+                gene_len = s.len()
+                contents = f.read_html_file("geneInfo.html") \
+                    .render(context={
+                    "gene_name": gene_name,
+                    "start": start,
+                    "end": end,
+                    "chromo_name": chromo_name,
+                    "gene_len": gene_len,
+                    "gene_id": gene_id
+                })
+            elif path == "/geneCalc":
+                s = Seq(gene_seq)
+                base_count = s.count_percentage()
+                gene_len = s.len()
+                contents = f.read_html_file("geneCalc.html") \
+                    .render(context={
+                    "gene_name": gene_name,
+                    "gene_seq": gene_seq,
+                    "gene_len": gene_len,
+                    "percentage": f.convert_message(base_count)
+                })
+        elif path == "/geneList":
+            try:
+                chromosome = int(arguments["chromosome"][0])
+                start = int(arguments["start"][0])
+                end = int(arguments["end"][0])
+                dict_list_ensembl = f.ensembl("phenotype/region/homo_sapiens/" + str(chromosome) + ":" + str(start) + "-" + str(end) + "?feature_type=Variation;")
+                print(dict_list_ensembl)
+                list_genes = []
+                for d in dict_list_ensembl:
+                    if "phenotype_associations" in d.keys():
+                        for di in d["phenotype_associations"]:
+                            if "attributes" in di.keys():
+                                if "associated_gene" in di["attributes"]:
+                                    list_genes.append(di["attributes"]["associated_gene"])
+                print(list_genes)
+                contents = f.read_html_file("geneList.html") \
+                    .render(context={
+                    "list_genes": list_genes
+                })
+            except ValueError:
+                contents = pathlib.Path("html/error.html").read_text()
         else:
             contents = pathlib.Path("html/error.html").read_text()
 
