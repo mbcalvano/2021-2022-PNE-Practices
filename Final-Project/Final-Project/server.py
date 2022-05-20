@@ -44,6 +44,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 .render(context={
                 "genes": genes_list
             })
+
+        # BASIC LEVEL ENDPOINTS
         elif path == "/listSpecies":
             try:
                 dict_ensembl = f.ensembl("/info/species?")
@@ -99,15 +101,18 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     contents = pathlib.Path("html/error.html").read_text()
             except KeyError:
                 contents = pathlib.Path("html/error.html").read_text()
+
+        # MEDIUM LEVEL ENDPOINTS
         elif path == "/geneSeq" or path == "/geneInfo" or path == "/geneCalc":
-            gene_name = arguments["gene_name"][0]
-            gene_id = genes_dict[gene_name]
+            gene = arguments["gene"][0]
+            gene_id = genes_dict[gene]
             dict_ensembl = f.ensembl("sequence/id/" + gene_id + "?")
             gene_seq = dict_ensembl["seq"]
-            if path == "/geneSeq": contents = f.read_html_file("geneSeq.html") \
-                .render(context={
-                "gene_seq": gene_seq
-            })
+            if path == "/geneSeq":
+                contents = f.read_html_file("geneSeq.html") \
+                    .render(context={
+                    "gene_seq": gene_seq
+                })
             elif path == "/geneInfo":
                 desc_list = dict_ensembl["desc"].split(":")
                 chromo_name = desc_list[2]
@@ -117,7 +122,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 gene_len = s.len()
                 contents = f.read_html_file("geneInfo.html") \
                     .render(context={
-                    "gene_name": gene_name,
+                    "gene_name": gene,
                     "start": start,
                     "end": end,
                     "chromo_name": chromo_name,
@@ -130,18 +135,18 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 gene_len = s.len()
                 contents = f.read_html_file("geneCalc.html") \
                     .render(context={
-                    "gene_name": gene_name,
+                    "gene_name": gene,
                     "gene_seq": gene_seq,
                     "gene_len": gene_len,
                     "percentage": f.convert_message(base_count)
                 })
         elif path == "/geneList":
             try:
-                chromosome = int(arguments["chromosome"][0])
+                chromo = int(arguments["chromo"][0])
                 start = int(arguments["start"][0])
                 end = int(arguments["end"][0])
                 if start < end:
-                    dict_list_ensembl = f.ensembl("phenotype/region/homo_sapiens/" + str(chromosome) + ":" + str(start) + "-" + str(end) + "?feature_type=Variation;")
+                    dict_list_ensembl = f.ensembl("phenotype/region/homo_sapiens/" + str(chromo) + ":" + str(start) + "-" + str(end) + "?feature_type=Variation;")
                     list_genes = []
                     for d in dict_list_ensembl:
                         if "phenotype_associations" in d.keys():

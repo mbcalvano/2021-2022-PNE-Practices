@@ -30,7 +30,7 @@
 <form action="geneSeq" method="get">
 <br> <br> 4) Get the sequence of a human gene: <br>
     <br>Select a gene:
-    <select name="gene_name">
+    <select name="gene">
             {% for g in context.genes %}
             <option value={{g}}>{{g}}</option>
             {% endfor %}
@@ -60,7 +60,7 @@
 <form action="geneList" method="get">
 <br> <br> 7) Obtain the names of the genes located in a chromosome from the start to end positions: <br>
     <br>Write your chromosome name:
-    <input type="text" name="chromosome"><br>
+    <input type="text" name="chromo"><br>
     <br>Input the start:
     <input type="text" name="start"><br>
     <br>Input the end:
