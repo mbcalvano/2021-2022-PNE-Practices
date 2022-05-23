@@ -174,6 +174,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         try:
             if arguments["json"][0] == "1":
                 self.send_header('Content-Type', 'application/json')
+                print("YES IT WORKS")
             else:
                 self.send_header('Content-Type', 'text/html')
         except KeyError:
