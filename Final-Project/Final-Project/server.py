@@ -1,4 +1,5 @@
 import http.server
+import json
 import socketserver
 import termcolor
 from urllib.parse import parse_qs, urlparse
@@ -57,15 +58,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     n_species = total_species
                 for i in range(n_species):
                     list_species.append(dict_ensembl["species"][i]["display_name"])
-
-                print(n_species)
-                if list_species[0] != "":
-                    contents = f.read_html_file("listSpecies.html") \
-                        .render(context={
+                dict_contents = {
                         "n_species": n_species,
                         "list_species": list_species,
                         "total_species": total_species
-                    })
+                    }
+                if "json" in arguments.keys():
+                    contents = dict_contents
+                elif list_species[0] != "":
+                    contents = f.read_html_file("listSpecies.html") \
+                        .render(context=dict_contents)
                 else:
                     contents = pathlib.Path("html/error.html").read_text()
             except ValueError:
@@ -173,10 +175,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         try:
             if arguments["json"][0] == "1":
+                contents = json.dumps(contents)
                 self.send_header('Content-Type', 'application/json')
-                print("YES IT WORKS")
-            else:
-                self.send_header('Content-Type', 'text/html')
         except KeyError:
             self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', len(contents.encode()))
