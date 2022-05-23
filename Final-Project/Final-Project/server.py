@@ -57,6 +57,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     n_species = total_species
                 for i in range(n_species):
                     list_species.append(dict_ensembl["species"][i]["display_name"])
+
                 print(n_species)
                 if list_species[0] != "":
                     contents = f.read_html_file("listSpecies.html") \
@@ -170,7 +171,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             contents = pathlib.Path("html/error.html").read_text()
 
         self.send_response(200)
-        self.send_header('Content-Type', 'text/html')
+        try:
+            if arguments["json"][0] == "1":
+                self.send_header('Content-Type', 'application/json')
+            else:
+                self.send_header('Content-Type', 'text/html')
+        except KeyError:
+            self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', len(contents.encode()))
         self.end_headers()
         self.wfile.write(contents.encode())

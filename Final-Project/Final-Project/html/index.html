@@ -11,12 +11,16 @@
 1) List of species in the genome database:
     <br><br>Limit:
     <input type="text" name="limit"><br><br>
-<input type="submit" value="SEND">
+    Print on console?
+  <input type="checkbox" name="json" value="1">
+    <input type="submit" value="SEND">
 </form>
 <form action="karyotype" method="get">
 <br> <br> 2) Information about the karyotype:
     <br><br>Select the species:
     <input type="text" name="specie"><br><br>
+    Print on console?
+  <input type="checkbox" name="json" value="1">
 <input type="submit" value="SEND">
 </form>
 <form action="chromosomeLength" method="get">
@@ -25,6 +29,8 @@
     <input type="text" name="specie"><br><br>
     Select a chromosome:
     <input type="text" name="chromo"><br><br>
+    Print on console?
+  <input type="checkbox" name="json" value="1">
 <input type="submit" value="SEND">
 </form>
 <form action="geneSeq" method="get">
@@ -34,7 +40,9 @@
             {% for g in context.genes %}
             <option value={{g}}>{{g}}</option>
             {% endfor %}
-        </select>
+        </select><br><br>
+    Print on console?
+  <input type="checkbox" name="json" value="1">
 <input type="submit" value="SEND">
 </form>
 <form action="geneInfo" method="get">
@@ -44,7 +52,9 @@
             {% for g in context.genes %}
             <option value={{g}}>{{g}}</option>
             {% endfor %}
-        </select>
+        </select><br><br>
+    Print on console?
+  <input type="checkbox" name="json" value="1">
 <input type="submit" value="SEND">
 </form>
 <form action="geneCalc" method="get">
@@ -54,7 +64,9 @@
             {% for g in context.genes %}
             <option value={{g}}>{{g}}</option>
             {% endfor %}
-        </select>
+        </select><br><br>
+    Print on console?
+  <input type="checkbox" name="json" value="1">
 <input type="submit" value="SEND">
 </form>
 <form action="geneList" method="get">
@@ -64,7 +76,9 @@
     <br>Input the start:
     <input type="text" name="start"><br>
     <br>Input the end:
-    <input type="text" name="end"><br>
+    <input type="text" name="end"><br><br>
+    Print on console?
+  <input type="checkbox" name="json" value="1">
 <input type="submit" value="SEND">
 </form>
 </body>
