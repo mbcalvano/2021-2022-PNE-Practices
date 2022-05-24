@@ -15,7 +15,7 @@ try:
     r1 = conn.getresponse()
     data1 = r1.read().decode("utf-8")
     data1 = json.loads(data1)
-    termcolor.cprint("\nLIST SPECIES ENDPOINT", 'green')
+    termcolor.cprint("\n1. LIST SPECIES ENDPOINT", 'green')
     print("Number of species selected:", data1["n_species"])
     print("Number of species available:", data1["total_species"])
     print("List of species:")
@@ -26,7 +26,7 @@ try:
     r2 = conn.getresponse()
     data2 = r2.read().decode("utf-8")
     data2 = json.loads(data2)
-    termcolor.cprint("\nKARYOTYPE ENDPOINT", 'green')
+    termcolor.cprint("\n2. KARYOTYPE ENDPOINT", 'green')
     print("List of karyotypes:")
     print(*data2["karyotype"], sep=', ')
 
@@ -35,7 +35,7 @@ try:
     r3 = conn.getresponse()
     data3 = r3.read().decode("utf-8")
     data3 = json.loads(data3)
-    termcolor.cprint("\nCHROMOSOME LENGTH ENDPOINT", 'green')
+    termcolor.cprint("\n3. CHROMOSOME LENGTH ENDPOINT", 'green')
     print("The length of the chromosome is:", data3["chromoLength"])
 
     # geneSeq endpoint
@@ -43,7 +43,7 @@ try:
     r4 = conn.getresponse()
     data4 = r4.read().decode("utf-8")
     data4 = json.loads(data4)
-    termcolor.cprint("\nGENE SEQ ENDPOINT", 'green')
+    termcolor.cprint("\n4. GENE SEQ ENDPOINT", 'green')
     print("The sequence of the gene is:", data4["gene_seq"])
 
     # geneInfo endpoint
@@ -51,7 +51,7 @@ try:
     r5 = conn.getresponse()
     data5 = r5.read().decode("utf-8")
     data5 = json.loads(data5)
-    termcolor.cprint("\nGENE INFO ENDPOINT", 'green')
+    termcolor.cprint("\n5. GENE INFO ENDPOINT", 'green')
     print("Gene:", data5["gene_name"])
     print("ID:", data5["gene_id"])
     print("Start:", data5["start"])
@@ -64,7 +64,7 @@ try:
     r6 = conn.getresponse()
     data6 = r6.read().decode("utf-8")
     data6 = json.loads(data6)
-    termcolor.cprint("\nGENE CALC ENDPOINT", 'green')
+    termcolor.cprint("\n6. GENE CALC ENDPOINT", 'green')
     print("Gene:", data6["gene_name"])
     print("Length:", data5["gene_len"])
     print(data6["percentage"])
@@ -74,7 +74,7 @@ try:
     r7 = conn.getresponse()
     data7 = r7.read().decode("utf-8")
     data7 = json.loads(data7)
-    termcolor.cprint("\nGENE LIST ENDPOINT", 'green')
+    termcolor.cprint("\n7. GENE LIST ENDPOINT", 'green')
     print("List of genes:")
     for g in data7["list_genes"]:
         print("-" + g)

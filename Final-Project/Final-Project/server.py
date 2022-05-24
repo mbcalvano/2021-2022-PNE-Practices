@@ -72,6 +72,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 contents = pathlib.Path("html/error.html").read_text()
             except IndexError:
                 contents = pathlib.Path("html/error.html").read_text()
+            except UnicodeEncodeError:
+                contents = pathlib.Path("html/error.html").read_text()
         elif path == "/karyotype":
             try:
                 specie = arguments["specie"][0]
@@ -83,6 +85,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 contents = f.read_html_file("karyotype.html") \
                     .render(context=dict_contents)
             except KeyError:
+                contents = pathlib.Path("html/error.html").read_text()
+            except UnicodeEncodeError:
                 contents = pathlib.Path("html/error.html").read_text()
 
         elif path == "/chromosomeLength":
@@ -103,6 +107,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     contents = pathlib.Path("html/error.html").read_text()
             except KeyError:
+                contents = pathlib.Path("html/error.html").read_text()
+            except UnicodeEncodeError:
                 contents = pathlib.Path("html/error.html").read_text()
 
         # MEDIUM LEVEL ENDPOINTS
@@ -171,6 +177,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             except KeyError:
                 contents = pathlib.Path("html/error.html").read_text()
             except AttributeError:
+                contents = pathlib.Path("html/error.html").read_text()
+            except UnicodeEncodeError:
                 contents = pathlib.Path("html/error.html").read_text()
         else:
             contents = pathlib.Path("html/error.html").read_text()

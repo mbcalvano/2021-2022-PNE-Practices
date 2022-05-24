@@ -6,6 +6,8 @@
 </head>
 <body style="background-color: orange;">
 <p>The list of genes is: <br><br>
-    <textarea>{{context.list_genes}}</textarea></p>
+{% for i in context.list_genes%}
+    <ul><li>{{i}}</li></ul>
+{% endfor %}
 </body>
 </html>
