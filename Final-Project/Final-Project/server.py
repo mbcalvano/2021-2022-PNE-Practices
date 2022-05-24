@@ -63,9 +63,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         "list_species": list_species,
                         "total_species": total_species
                     }
-                if "json" in arguments.keys():
-                    contents = dict_contents
-                elif list_species[0] != "":
+                if list_species[0] != "":
                     contents = f.read_html_file("listSpecies.html") \
                         .render(context=dict_contents)
                 else:
@@ -79,10 +77,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 specie = arguments["specie"][0]
                 dict_ensembl = f.ensembl("info/assembly/" + specie.replace(" ", "") + "?")
                 karyotype_list = dict_ensembl["karyotype"]
-                contents = f.read_html_file("karyotype.html") \
-                    .render(context={
+                dict_contents = {
                     "karyotype": karyotype_list
-                })
+                }
+                contents = f.read_html_file("karyotype.html") \
+                    .render(context=dict_contents)
             except KeyError:
                 contents = pathlib.Path("html/error.html").read_text()
 
@@ -96,10 +95,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     if d["name"] == chromo:
                         chromo_length = d["length"]
                 if chromo_length != "":
-                    contents = f.read_html_file("chromosomeLength.html") \
-                        .render(context={
+                    dict_contents = {
                         "chromoLength": chromo_length
-                    })
+                    }
+                    contents = f.read_html_file("chromosomeLength.html") \
+                        .render(context=dict_contents)
                 else:
                     contents = pathlib.Path("html/error.html").read_text()
             except KeyError:
@@ -112,10 +112,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             dict_ensembl = f.ensembl("sequence/id/" + gene_id + "?")
             gene_seq = dict_ensembl["seq"]
             if path == "/geneSeq":
-                contents = f.read_html_file("geneSeq.html") \
-                    .render(context={
+                dict_contents = {
                     "gene_seq": gene_seq
-                })
+                }
+                contents = f.read_html_file("geneSeq.html") \
+                    .render(context=dict_contents)
             elif path == "/geneInfo":
                 desc_list = dict_ensembl["desc"].split(":")
                 chromo_name = desc_list[2]
@@ -123,26 +124,27 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 end = desc_list[4]
                 s = Seq(gene_seq)
                 gene_len = s.len()
-                contents = f.read_html_file("geneInfo.html") \
-                    .render(context={
+                dict_contents = {
                     "gene_name": gene,
                     "start": start,
                     "end": end,
                     "chromo_name": chromo_name,
                     "gene_len": gene_len,
                     "gene_id": gene_id
-                })
+                }
+                contents = f.read_html_file("geneInfo.html") \
+                    .render(context=dict_contents)
             elif path == "/geneCalc":
                 s = Seq(gene_seq)
                 base_count = s.count_percentage()
                 gene_len = s.len()
-                contents = f.read_html_file("geneCalc.html") \
-                    .render(context={
+                dict_contents = {
                     "gene_name": gene,
-                    "gene_seq": gene_seq,
                     "gene_len": gene_len,
                     "percentage": f.convert_message(base_count)
-                })
+                }
+                contents = f.read_html_file("geneCalc.html") \
+                    .render(context=dict_contents)
         elif path == "/geneList":
             try:
                 chromo = int(arguments["chromo"][0])
@@ -157,10 +159,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                                 if "attributes" in di.keys():
                                     if "associated_gene" in di["attributes"]:
                                         list_genes.append(di["attributes"]["associated_gene"])
-                    contents = f.read_html_file("geneList.html") \
-                        .render(context={
+                    dict_contents = {
                         "list_genes": list_genes
-                    })
+                    }
+                    contents = f.read_html_file("geneList.html") \
+                        .render(context=dict_contents)
                 else:
                     contents = pathlib.Path("html/error.html").read_text()
             except ValueError:
@@ -175,8 +178,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         try:
             if arguments["json"][0] == "1":
+                contents = dict_contents
                 contents = json.dumps(contents)
                 self.send_header('Content-Type', 'application/json')
+            else:
+                self.send_header('Content-Type', 'text/html')
         except KeyError:
             self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', len(contents.encode()))
