@@ -87,20 +87,24 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         elif path == "/chromosomeLength":
             try:
                 species = arguments["specie"][0]
-                chromo = arguments["chromo"][0]
+                minimum_len = arguments["minimum_len"][0]
                 dict_ensembl = f.ensembl("info/assembly/" + species + "?")
-                chromo_length = ""
+                chromo_names = []
                 for d in dict_ensembl["top_level_region"]:
-                    if d["name"] == chromo:
-                        chromo_length = d["length"]
-                if chromo_length != "":
-                    dict_contents = {
-                        "chromoLength": chromo_length
-                    }
+                    if d["coord_system"] == "chromosome":
+                        if d["length"] >= int(minimum_len):
+                            chromo_names.append(d["name"])
+                dict_contents = {
+                    "chromo_names": chromo_names,
+                    "minimum_len": minimum_len
+                }
+                if chromo_names and int(minimum_len) >= 0:
                     contents = f.read_html_file("chromosomeLength.html") \
                         .render(context=dict_contents)
                 else:
                     contents = pathlib.Path("html/error.html").read_text()
+            except ValueError:
+                contents = pathlib.Path("html/error.html").read_text()
             except KeyError:
                 contents = pathlib.Path("html/error.html").read_text()
             except UnicodeEncodeError:
@@ -179,7 +183,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 contents = pathlib.Path("html/error.html").read_text()
         else:
             contents = pathlib.Path("html/error.html").read_text()
-
         self.send_response(200)
         try:
             if arguments["json"][0] == "1":

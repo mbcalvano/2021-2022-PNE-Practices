@@ -5,7 +5,9 @@
     <title>chromosomeLength</title>
 </head>
 <body style="background-color: lightblue;">
-<p>The length of the chromosome is: {{context.chromoLength}}</p>
-
+<p>The list of genes with a length bigger than {{context.minimum_len}} is: <br><br>
+{% for i in context.chromo_names%}
+    <ul><li>{{i}}</li></ul>
+{% endfor %}
 </body>
 </html>
