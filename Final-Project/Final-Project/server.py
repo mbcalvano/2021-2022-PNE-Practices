@@ -165,9 +165,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                                 if "attributes" in di.keys():
                                     if "associated_gene" in di["attributes"]:
                                         list_genes.append(di["attributes"]["associated_gene"])
-                    dict_contents = {
-                        "list_genes": list_genes
-                    }
+                    if not list_genes:
+                        list_genes.append("No genes present in the selected range and chromosome")
+                    if "non_repeated" in arguments:
+                        list_genes = set(list_genes)
+                    dict_contents = {"list_genes": list_genes}
                     contents = f.read_html_file("geneList.html") \
                         .render(context=dict_contents)
                 else:
