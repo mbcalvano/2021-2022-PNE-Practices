@@ -11,6 +11,7 @@ conn = http.client.HTTPConnection(SERVER)
 
 try:
     # listSpecies endpoint
+    termcolor.cprint("//BASIC LEVEL ENDPOINTS//", 'blue')
     conn.request("GET", "/listSpecies?limit=10&" + PARAMS)
     r1 = conn.getresponse()
     data1 = r1.read().decode("utf-8")
@@ -38,6 +39,7 @@ try:
     termcolor.cprint("\n3. CHROMOSOME LENGTH ENDPOINT", 'green')
     print("The length of the chromosome is:", data3["chromoLength"])
 
+    termcolor.cprint("\n//MEDIUM LEVEL ENDPOINTS//", 'blue')
     # geneSeq endpoint
     conn.request("GET", "/geneSeq?gene=FRAT1&" + PARAMS)
     r4 = conn.getresponse()
@@ -74,9 +76,19 @@ try:
     r7 = conn.getresponse()
     data7 = r7.read().decode("utf-8")
     data7 = json.loads(data7)
-    termcolor.cprint("\n7. GENE LIST ENDPOINT", 'green')
+    termcolor.cprint("\n7 GENE LIST ENDPOINT", 'green')
+    termcolor.cprint("(1) Including all genes", 'yellow')
     print("List of genes:")
     for g in data7["list_genes"]:
+        print("-" + g)
+
+    conn.request("GET", "/geneList?chromo=9&start=22125500&end=22136000&non_repeated=on&" + PARAMS)
+    r8 = conn.getresponse()
+    data8 = r8.read().decode("utf-8")
+    data8 = json.loads(data8)
+    termcolor.cprint("\n(2) Removing repeated entries", 'yellow')
+    print("List of genes:")
+    for g in data8["list_genes"]:
         print("-" + g)
 
 except ConnectionRefusedError:

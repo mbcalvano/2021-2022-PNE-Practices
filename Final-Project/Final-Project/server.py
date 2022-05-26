@@ -1,7 +1,6 @@
 import http.server
 import json
 import socketserver
-import termcolor
 from urllib.parse import parse_qs, urlparse
 import functions as f
 import pathlib
@@ -33,13 +32,9 @@ socketserver.TCPServer.allow_reuse_address = True
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
-        termcolor.cprint(self.requestline, 'green')
         url_path = urlparse(self.path)
         path = url_path.path
         arguments = parse_qs(url_path.query)
-        print("The old path was", self.path)
-        print("The new path is", path)
-        print("arguments", arguments)
         if path == "/":
             contents = f.read_html_file("index.html") \
                 .render(context={
@@ -168,7 +163,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     if not list_genes:
                         list_genes.append("No genes present in the selected range and chromosome")
                     if "non_repeated" in arguments:
-                        list_genes = set(list_genes)
+                        list_genes = list(set(list_genes))
                     dict_contents = {"list_genes": list_genes}
                     contents = f.read_html_file("geneList.html") \
                         .render(context=dict_contents)
